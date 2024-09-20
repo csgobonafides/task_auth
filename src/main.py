@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from models._jwt import User, registed, authentifick, get_user_from_token
+from src.models._jwt import User, registed, authentifick, get_user_from_token
 from src.models.parsers import data_films
 
 app = FastAPI()
@@ -13,12 +13,14 @@ async def register(user: User):
 async def auth(user: User):
     return authentifick(user.username, user.password)
 
-@app.post('/data_film')
-async def data_film(request: Request):
+@app.post('/data_film/{name_film}')
+async def data_film(name_film, request: Request):
+    print(request.headers.get('authorization'))
     if request.headers.get('authorization'):
         result = get_user_from_token(request.headers.get('authorization')[7:])
-        if result == True:
-            return {'message': 'OK'}
+        print(result)
+        if result:
+            return data_films(name_film)
         else:
             return result
     else:
