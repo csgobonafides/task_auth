@@ -13,12 +13,12 @@ async def register(user: User):
 async def auth(user: User):
     return authentifick(user.username, user.password)
 
-@app.post('/data_film/{name_film}')
-async def data_film(name_film, request: Request):
+@app.post('/data_film')
+async def data_film(request: Request):
     if request.headers.get('authorization'):
         result = get_user_from_token(request.headers.get('authorization')[7:])
         if result == True:
-            return data_films(name_film)
+            return {'message': 'OK'}
         else:
             return result
     else:
