@@ -30,7 +30,7 @@ def get_user_from_token(token: str):
 def authentifick(login, psw):
     for user in USER_DATA:
         if user.get('login') == login and user.get('password') == psw:
-            token = create_jwt_token({'login': f'{login}', 'exp': datetime.now() + timedelta(days=0, minutes=5)})
+            token = create_jwt_token({'login': f'{login}', 'exp': datetime.now() + timedelta(days=0, minutes=1)})
             return {'Вы успешно авторизовались, вот ваш токен': token}
         elif user.get('login') == login and user.get('password') != psw:
             return {'message': 'Вы указали неверный пороль.'}

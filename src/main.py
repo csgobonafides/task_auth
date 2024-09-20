@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 from src.models._jwt import User, registed, authentifick, get_user_from_token
 from src.models.parsers import data_films
+import asyncio
 
 app = FastAPI()
 
@@ -20,7 +21,7 @@ async def data_film(name_film, request: Request):
         result = get_user_from_token(request.headers.get('authorization')[7:])
         print(result)
         if result:
-            return data_films(name_film)
+            return await data_films(name_film)
         else:
             return result
     else:
