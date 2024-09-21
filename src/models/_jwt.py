@@ -21,6 +21,7 @@ def get_user_from_token(token: str):
         payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITM)
         for user in USER_DATA:
             if user.get('login') == payload.get('login'):
+                print(payload.get('exp'))
                 return True
     except jwt.ExpiredSignatureError:
         return 'Error ExpiredSignatureError'
@@ -30,7 +31,7 @@ def get_user_from_token(token: str):
 def authentifick(login, psw):
     for user in USER_DATA:
         if user.get('login') == login and user.get('password') == psw:
-            token = create_jwt_token({'login': f'{login}', 'exp': datetime.now() + timedelta(days=0, minutes=1)})
+            token = create_jwt_token({'login': f'{login}', 'exp': datetime.now() - timedelta(days=0, hours=4, minutes=59)})
             return {'Вы успешно авторизовались, вот ваш токен': token}
         elif user.get('login') == login and user.get('password') != psw:
             return {'message': 'Вы указали неверный пороль.'}

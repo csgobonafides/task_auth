@@ -20,7 +20,7 @@ async def data_film(name_film, request: Request):
     if request.headers.get('authorization'):
         result = get_user_from_token(request.headers.get('authorization')[7:])
         print(result)
-        if result:
+        if result == True:
             return await data_films(name_film)
         else:
             return result
