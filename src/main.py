@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
-from src.models._jwt import User, registed, authentifick, get_user_from_token
+from src.models._jwt import User, registed, authentifick, get_user_from_token, get_user_from_refresh_token
 from src.models.parsers import data_films
+from src.models.bl_lst import bl_list, open_list, exit_list
 import asyncio
 
 app = FastAPI()
@@ -22,6 +23,11 @@ async def data_film(name_film, request: Request):
         print(result)
         if result == True:
             return await data_films(name_film)
+        if result == 'Error ExpiredSignatureError':
+            if request.headers.get('refresh'):
+                check_refresh = get_user_from_refresh_token(request.headers.get('refresh'))
+                if check_refresh != 'Error ExpiredSignatureError' and check_refresh != 'Error InvalidTokenError':
+                    return check_refresh, await data_films(name_film)
         else:
             return result
     else:
@@ -29,4 +35,8 @@ async def data_film(name_film, request: Request):
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host='127.0.0.1')
+    try:
+        open_list()
+        uvicorn.run(app, host='127.0.0.1')
+    finally:
+        exit_list()
